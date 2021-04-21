@@ -34,3 +34,13 @@
     color: rgb(179, 128, 216);
   }
 
+  .weatherSpan{
+    color: royalblue;
+  }
+  
+h5{
+  margin: 0 auto;
+  font-size: 30px;
+  font-weight: bold;
+  color: royalblue;
+}
