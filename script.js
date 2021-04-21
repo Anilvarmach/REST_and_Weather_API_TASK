@@ -10,8 +10,7 @@ function displyData(CountryData) {
 
     var img = createBootstrapCard("img", "card-img-top");
     img.setAttribute("src", obj.flag);
-    var a = createBootstrapCard("a");
-    a.append(img);
+
 
     var h4 = createBootstrapCard("h4", "card-title");
     h4.innerHTML = `<span>Country:</span> ${obj.name}`;
@@ -65,25 +64,21 @@ function displyData(CountryData) {
     cardBody.append(h4, pTag1, pTag2, pTag3, pTag4, pTag5,pTag6,pTag7,pTag8,pTag9,pTag10,pTag11,pTag12,pTag13,pTag14,pTag15);
 
     var cardFooter = createBootstrapCard("div", "card-footer");
-    var btn = createBootstrapCard('a', 'btn btn-primary show-modal');
+    var btn = createBootstrapCard('button', 'btn btn-outline-primary');
     btn.innerHTML = 'See Weather';
+    btn.setAttribute('data-toggle', 'modal');
+    btn.setAttribute('data-target','#exampleModal')
     btn.setAttribute('onclick', `weather(${obj.latlng[0]},${obj.latlng[1]})`);
-   
     
     cardFooter.append(btn)
-    card.append(a, cardBody, cardFooter);
+    card.append(img, cardBody, cardFooter);
     col.append(card);
     row.append(col);
   });
 }
 
 var row = document.querySelector("#row");
-function createBootstrapCard(elemName, elemClass = "", elemId = "") {
-var element = document.createElement(elemName);
-element.setAttribute("class", elemClass);
-element.setAttribute("id", elemId);
-return element;
-}
+
 
 
 fetch("https://restcountries.eu/rest/v2/all")
@@ -92,6 +87,37 @@ fetch("https://restcountries.eu/rest/v2/all")
   displyData(data);
 })
 .catch((err) => console.log("Error:", err));
+
+
+
+function displyWeatherData(weatherData) {
+  data = weatherData;
+    var pTag1 = createBootstrapCard("p", "card-text");
+    pTag1.innerHTML = `${data.name}`;
+
+    var pTag2 = createBootstrapCard("p", 'card-text');
+    pTag2.innerHTML = `<span class="weatherSpan">Temperature:</span> ${data.main.temp} Cel`;
+
+    var pTag3 = createBootstrapCard("p", "card-text");
+    pTag3.innerHTML = `<span class="weatherSpan"> Humidity:</span>  ${data.main.humidity} %`;
+
+    var pTag4 = createBootstrapCard("p", "card-text");
+    pTag4.innerHTML = `<span class="weatherSpan"> Pressure:</span>${data.main.pressure} Pa`;
+
+    var pTag5 = createBootstrapCard("p", "card-text");
+    pTag5.innerHTML = `<span class="weatherSpan">Weather:</span> ${data.weather[0].main}`;
+    
+   ModalTitle.append(pTag1);
+    modalBody.append(pTag2,  pTag3, pTag4, pTag5);
+}
+let ModalTitle = document.querySelector('.modal-title');
+let modalBody = document.querySelector('#modal-body');
+function createBootstrapCard(elemName, elemClass = "", elemId = "") {
+var element = document.createElement(elemName);
+element.setAttribute("class", elemClass);
+element.setAttribute("id", elemId);
+return element;
+}
 
 
 function weather(lat, lang) {
@@ -104,12 +130,8 @@ function weather(lat, lang) {
       return res.json();
     })
     .then((data) => {
-      alert(`
-          Country Name- ${data.name}
-          Temperature - ${data.main.temp} Cel
-          Humidity - ${data.main.humidity} %
-          Pressure - ${data.main.pressure} Pa
-          Weather - ${data.weather[0].main}`);
+      displyWeatherData(data);
+          console.log(data)
     })
     .catch((err) => {
       console.log(err);
